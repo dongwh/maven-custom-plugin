@@ -39,6 +39,7 @@ import java.util.jar.JarFile;
  * @requiresDependencyResolution test
  */
 public class CheckBundleMojo extends AbstractMojo {
+    private static final String[] INCLUDES_DEFAULT={"java","xml"};
     /**
      * The Maven project.
      *
@@ -120,10 +121,29 @@ public class CheckBundleMojo extends AbstractMojo {
     private final String BUNDLE_TYPE="bundleType";
     private final String VERSION="version";
 
+    /**
+     * @parameter
+     */
+    private String[] includes;
+
+    /**
+     * @parameter
+     */
+    private String something;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("custom maven plugin start---------------------------------------------------");
         getLog().info("localRepository.getUrl()" + localRepository.getUrl());
         getLog().info("localRepository.getBasedir()=" + localRepository.getBasedir());
+
+        getLog().info("includes==============="+includes);
+        if(null==includes || includes.length==0){
+            includes = INCLUDES_DEFAULT;
+        }
+        getLog().info("includes==============="+includes);
+        for(String include : includes){
+            getLog().info("include==============="+include);
+        }
 
         ArtifactVersion detectedMavenVersion = rti.getApplicationVersion();
 
@@ -187,8 +207,8 @@ public class CheckBundleMojo extends AbstractMojo {
     private boolean readJarInfo(String bundleFullName){
         boolean bundleStatus = false;
         try {
-            getLog().info("read jar info start");
-            getLog().info("bundleFullName==========="+bundleFullName);
+            //getLog().info("read jar info start");
+            //getLog().info("bundleFullName==========="+bundleFullName);
             JarFile jarFile = new JarFile(bundleFullName);
             JarEntry entry = jarFile.getJarEntry("META-INF/MANIFEST.MF");
             /*BufferedReader reader = new BufferedReader(new InputStreamReader(jarFile.getInputStream(entry)));
